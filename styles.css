@@ -4,13 +4,17 @@ body {
     flex-direction: column; 
     justify-content: center; 
     align-items: center; 
-    height: 100vh; 
+    min-height: 100vh; 
     background: #000; 
     overflow: hidden;
 }
 
 #game-container { 
-    position: relative; 
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    height: 100vh;
+    max-height: 600px;
 }
 
 #current-problem {
@@ -19,9 +23,12 @@ body {
     left: 50%;
     transform: translateX(-50%);
     color: white;
-    font-size: 32px;
+    font-size: min(32px, 6vw);
     font-family: Arial;
     display: none;
+    text-align: center;
+    width: 90%;
+    padding: 10px;
 }
 
 #answer-buttons {
@@ -29,27 +36,49 @@ body {
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    display: flex;
-    gap: 20px;
     display: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    width: 90%;
+    max-width: 400px;
+    padding: 0 10px;
 }
 
 .answer-button {
-    padding: 10px 20px;
-    font-size: 24px;
+    padding: min(10px, 2vw) min(20px, 4vw);
+    font-size: min(24px, 5vw);
     cursor: pointer;
     border: none;
     border-radius: 5px;
     background-color: #444;
     color: #fff;
     transition: background-color 0.3s;
+    min-width: 60px;
+    min-height: 44px; /* Minimum touch target size */
+    touch-action: manipulation; /* Disable double-tap zoom */
 }
 
 .answer-button:hover {
     background-color: #666;
 }
 
+.answer-button:active {
+    background-color: #888; /* Feedback for touch */
+}
+
 .answer-button:disabled {
     background-color: #222;
     cursor: not-allowed;
+}
+
+@media (max-height: 500px) {
+    #current-problem {
+        bottom: 60px;
+    }
+    
+    #answer-buttons {
+        bottom: 10px;
+    }
 }

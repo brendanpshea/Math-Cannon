@@ -18,10 +18,48 @@ class MainScene extends Phaser.Scene {
         this.setupUI();
         this.setupAnswerButtons();
         this.generateNewProblem();
+
+        // Handle responsive scaling
+        this.scale.on('resize', this.handleResize, this);
+        this.handleResize();
+    }
+
+    handleResize() {
+        const width = this.scale.gameSize.width;
+        const height = this.scale.gameSize.height;
+
+        // Adjust text sizes based on game size
+        const baseFontSize = Math.min(32, width / 20);
+        this.scoreText.setFontSize(baseFontSize);
+        this.levelText.setFontSize(baseFontSize);
+
+        // Adjust game elements positioning
+        this.cannon.setPosition(width * 0.1, height * 0.9);
+        this.cannon.setFontSize(Math.min(50, width / 16));
+
+        // Reposition UI elements
+        this.scoreText.setPosition(16, 16);
+        this.levelText.setPosition(width - 16, 16).setOrigin(1, 0);
+
+        // Adjust enemy spacing
+        if (this.enemies) {
+            const spacing = width / 8;
+            this.enemies.forEach((enemy, index) => {
+                enemy.symbol.setPosition(
+                    width * 0.25 + (index * spacing),
+                    enemy.symbol.y
+                );
+                enemy.symbol.setFontSize(Math.min(50, width / 16));
+            });
+        }
     }
 
     setupCannon() {
-        this.cannon = this.add.text(50, 550, '🎯', { fontSize: '50px' }).setOrigin(0.5);
+        const width = this.scale.gameSize.width;
+        const height = this.scale.gameSize.height;
+        this.cannon = this.add.text(width * 0.1, height * 0.9, '🎯', { 
+            fontSize: Math.min(50, width / 16) 
+        }).setOrigin(0.5);
         this.cannon.setDepth(1);
     }
 

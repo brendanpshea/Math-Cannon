@@ -1,0 +1,55 @@
+body { 
+    margin: 0; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; 
+    background: #000; 
+    overflow: hidden;
+}
+
+#game-container { 
+    position: relative; 
+}
+
+#current-problem {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 32px;
+    font-family: Arial;
+    display: none;
+}
+
+#answer-buttons {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    display: none;
+}
+
+.answer-button {
+    padding: 10px 20px;
+    font-size: 24px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #444;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+.answer-button:hover {
+    background-color: #666;
+}
+
+.answer-button:disabled {
+    background-color: #222;
+    cursor: not-allowed;
+}

@@ -7,6 +7,9 @@ class MainScene extends Phaser.Scene {
         this.correctAnswer = null;
         this.answerButtons = [];
         this.cannonRotation = 0;
+        this.baseSpeed = 0.1;        // Base movement speed
+        this.currentSpeed = 0.1;     // Current movement speed
+        this.speedIncrease = 0.05;   // How much to increase speed on wrong answers
     }
 
     create() {
@@ -28,20 +31,16 @@ class MainScene extends Phaser.Scene {
         const width = this.scale.gameSize.width;
         const height = this.scale.gameSize.height;
 
-        // Adjust text sizes based on game size
         const baseFontSize = Math.min(32, width / 20);
         this.scoreText.setFontSize(baseFontSize);
         this.levelText.setFontSize(baseFontSize);
 
-        // Adjust game elements positioning
         this.cannon.setPosition(width * 0.1, height * 0.9);
         this.cannon.setFontSize(Math.min(50, width / 16));
 
-        // Reposition UI elements
         this.scoreText.setPosition(16, 16);
         this.levelText.setPosition(width - 16, 16).setOrigin(1, 0);
 
-        // Adjust enemy spacing
         if (this.enemies) {
             const spacing = width / 8;
             this.enemies.forEach((enemy, index) => {
@@ -68,6 +67,7 @@ class MainScene extends Phaser.Scene {
         this.level = 1;
         this.gameOver = false;
         this.maxNumber = 5;
+        this.currentSpeed = this.baseSpeed; // Reset speed at start
 
         this.enemyThemes = [
             { symbols: ['👻', '💀'] },      // Spooky theme
@@ -120,7 +120,7 @@ class MainScene extends Phaser.Scene {
                     fontSize: '50px'
                 }),
                 startY: startY,
-                speed: 0.1
+                speed: this.currentSpeed  // Use current speed for new enemies
             };
             
             this.enemies.push(enemy);
@@ -230,10 +230,18 @@ class MainScene extends Phaser.Scene {
     }
 
     checkAnswer(userAnswer) {
-        if (userAnswer === this.correctAnswer && this.enemies.length > 0) {
+        if (this.enemies.length === 0) return;
+
+        if (userAnswer === this.correctAnswer) {
             const randomIndex = Math.floor(Math.random() * this.enemies.length);
             const targetEnemy = this.enemies[randomIndex];
             this.shootLaser(targetEnemy);
+        } else {
+            // Increase speed of all enemies on wrong answer
+            this.currentSpeed += this.speedIncrease;
+            this.enemies.forEach(enemy => {
+                enemy.speed = this.currentSpeed;
+            });
         }
     }
 
@@ -241,6 +249,10 @@ class MainScene extends Phaser.Scene {
         this.level++;
         this.levelText.setText('Level: ' + this.level);
         this.maxNumber = Math.floor(5 * Math.pow(1.2, this.level - 1));
+        
+        // Reset speed to base speed at the start of each level
+        this.currentSpeed = this.baseSpeed;
+        
         this.createEnemies();
     }
 
